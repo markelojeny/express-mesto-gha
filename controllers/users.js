@@ -29,10 +29,14 @@ module.exports.getUser = (req, res) => {
         res.status(OK).send(user);
       }
     })
-    .catch(() => {
-      res.status(SERVER_ERROR).send({
-        message: 'Внутренняя ошибка сервера',
-      });
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(DATA_ERROR).send({ message: `Некорректные данные: + ${err.message}` });
+      } else {
+        res.status(SERVER_ERROR).send({
+          message: 'Внутренняя ошибка сервера',
+        });
+      }
     });
 };
 
