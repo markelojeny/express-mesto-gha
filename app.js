@@ -1,16 +1,18 @@
+const helmet = require('helmet');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const router = require('./routes');
 
-const { NOT_FOUND } = require('./utils/errors');
-
 const app = express();
-const { PORT = 3000 } = process.env;
 
 app.use(express.json());
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
+app.use(helmet());
+
+const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
+
+mongoose.connect(DB_URL, {
   useNewUrlParser: true,
 });
 
@@ -24,9 +26,6 @@ app.use((req, res, next) => {
 });
 
 app.use('/', router);
-app.use('*', (req, res) => {
-  res.status(NOT_FOUND).send({ message: 'Страница не найдена' });
-});
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
