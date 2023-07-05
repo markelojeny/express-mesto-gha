@@ -39,9 +39,14 @@ module.exports.deleteCard = (req, res, next) => {
     .then((card) => {
       if (String(card.owner) === req.user._id) {
         Card.findByIdAndRemove(req.params.cardId)
-          .then(() => res.status(OK).send(card));
-      } else {
-        throw new AccessDeniedError('Нет прав на удаление карточки');
+          .then(() => res.status(OK).send(card))
+          .catch((err) => {
+            if (err.name === 'ValidationError' || err.name === 'CastError') {
+              throw new ValidationError(`Некорректные данные: + ${err.message}`);
+            } else {
+              throw new AccessDeniedError('Нет прав на удаление карточки');
+            }
+          });
       }
     })
     .catch(next);
