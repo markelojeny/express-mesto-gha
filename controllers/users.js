@@ -39,11 +39,11 @@ module.exports.getUserById = (req, res, next) => {
 module.exports.getUser = (req, res, next) => {
   const owner = req.user._id;
   User.findById(owner)
+    .onFail(() => {
+      throw new NotFoundError('Нет пользователя с таким id');
+    })
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Нет пользователя с таким id');
-      }
-      res.status(OK).send(user);
+      res.status(OK).send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
