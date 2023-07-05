@@ -39,9 +39,6 @@ module.exports.getUserById = (req, res, next) => {
 module.exports.getUser = (req, res, next) => {
   const owner = req.user._id;
   User.findById(owner)
-    .onFail(() => {
-      throw new NotFoundError('Нет пользователя с таким id');
-    })
     .then((user) => {
       res.status(OK).send({ data: user });
     })
