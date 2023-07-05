@@ -1,5 +1,7 @@
 const { celebrate, Joi } = require('celebrate');
 
+const { url } = require('../utils/regexUrl');
+
 module.exports.validationUpdateProfile = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
@@ -15,21 +17,21 @@ module.exports.validationGetUser = celebrate({
 
 module.exports.validationUpdateAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string(),
+    avatar: Joi.string().pattern(url),
   }),
 });
 
 module.exports.validationCreateCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
-    link: Joi.string().required().pattern(/ht{2}ps?:\/{2}(w{3}\.)?([0-9a-zA-Z-.])\.([0-9a-zA-Z-._~:/?#@!$&'()*+,;=]*)#?/),
+    link: Joi.string().required().pattern(url),
   }),
 });
 
 module.exports.validationDeleteCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
-    link: Joi.string().required().pattern(/ht{2}ps?:\/{2}(w{3}\.)?([0-9a-zA-Z-.])\.([0-9a-zA-Z-._~:/?#@!$&'()*+,;=]*)#?/),
+    link: Joi.string().required().pattern(url),
   }),
 });
 
