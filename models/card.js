@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const validator = require('validator');
 
 const cardSchema = new Schema({
   name: {
@@ -10,6 +11,10 @@ const cardSchema = new Schema({
   link: {
     type: String,
     required: [true, 'Поле "name" должно быть заполнено'],
+    validate: {
+      validator: (v) => validator.isURL(v),
+      message: 'Некорректный URL',
+    },
   },
   owner: {
     type: Schema.Types.ObjectId,
@@ -25,6 +30,6 @@ const cardSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-});
+}, { versionKey: false });
 
 module.exports = model('card', cardSchema);

@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const router = require('./routes');
 
+const handleErrors = require('./middlewares/errors');
+
 const app = express();
 
 app.use(express.json());
@@ -17,15 +19,10 @@ mongoose.connect(DB_URL, {
 });
 
 app.use(bodyParser.json());
-app.use((req, res, next) => {
-  req.user = {
-    _id: '649d7f74816685fc30bad973',
-  };
-
-  next();
-});
 
 app.use('/', router);
+
+app.use(handleErrors);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
