@@ -17,7 +17,7 @@ module.exports.validationGetUser = celebrate({
 
 module.exports.validationUpdateAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().pattern(url),
+    avatar: Joi.string().regex(url),
   }),
 });
 
@@ -28,22 +28,9 @@ module.exports.validationCreateCard = celebrate({
   }),
 });
 
-module.exports.validationDeleteCard = celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).required(),
-    link: Joi.string().required().pattern(url),
-  }),
-});
-
-module.exports.validationLikeCard = celebrate({
-  body: Joi.object().keys({
-    _id: Joi.string().required().hex().length(24),
-  }),
-});
-
-module.exports.validationDislikeCard = celebrate({
-  body: Joi.object().keys({
-    _id: Joi.string().required().hex().length(24),
+module.exports.validationCardId = celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string().required().hex().length(24),
   }),
 });
 
@@ -58,7 +45,7 @@ module.exports.validationCreateUser = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string(),
+    avatar: Joi.string().regex(url),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   }),

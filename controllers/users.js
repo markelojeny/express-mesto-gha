@@ -30,9 +30,9 @@ module.exports.getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return next(new ValidationError(`Некорректные данные: + ${err.message}`));
+        next(new ValidationError(`Некорректные данные: + ${err.message}`));
       }
-      return next(err);
+      next(err);
     });
 };
 
