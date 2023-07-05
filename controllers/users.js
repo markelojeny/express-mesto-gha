@@ -37,7 +37,8 @@ module.exports.getUserById = (req, res, next) => {
 };
 
 module.exports.getUser = (req, res, next) => {
-  User.findById(req.user._id)
+  const owner = req.user._id;
+  User.findById(owner)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
