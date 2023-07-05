@@ -22,10 +22,10 @@ module.exports.getUsers = (req, res, next) => {
 module.exports.getUserById = (req, res, next) => {
   const { userId } = req.params;
   User.findById(userId)
+    .orFail(() => {
+      throw new NotFoundError('Нет пользователя с таким id');
+    })
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Нет пользователя с таким id');
-      }
       res.status(OK).send(user);
     })
     .catch((err) => {
@@ -86,10 +86,10 @@ module.exports.updateProfile = (req, res, next) => {
     new: true,
     runValidators: true,
   })
+    .orFail(() => {
+      throw new NotFoundError('Нет пользователя с таким id');
+    })
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Нет пользователя с таким id');
-      }
       res.status(OK).send(user);
     })
     .catch((err) => {
@@ -107,10 +107,10 @@ module.exports.updateAvatar = (req, res, next) => {
     new: true,
     runValidators: true,
   })
+    .orFail(() => {
+      throw new NotFoundError('Нет пользователя с таким id');
+    })
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Нет пользователя с таким id');
-      }
       res.status(OK).send(user);
     })
     .catch((err) => {
