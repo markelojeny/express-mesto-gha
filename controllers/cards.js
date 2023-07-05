@@ -4,6 +4,7 @@ const { CREATED, OK } = require('../utils/errors');
 
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
+const AccessDeniedError = require('../errors/AccessDeniedError');
 
 module.exports.getCard = (req, res, next) => {
   Card.find({})
@@ -31,18 +32,19 @@ module.exports.createCard = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка с указанным _id не найдена');
-      }
-      res.status(OK).send({ data: card });
+  Card.findById(req.params.cardId)
+    .orFail(() => {
+      throw new NotFoundError('Карточка с указанным _id не найдена');
     })
-    .catch((err) => {
-      if (!req.params.cardId.isValid) {
-        return next(new ValidationError(`Некорректные данные: + ${err.message}`));
-      } return next(err);
-    });
+    .then((card) => {
+      if (card.owner === req.user._id) {
+        Card.findByIdAndRemove(req.params.cardId)
+          .then(() => res.status(OK).send(card));
+      } else {
+        throw new AccessDeniedError('Нет прав на удаление карточки');
+      }
+    })
+    .catch(next);
 };
 
 module.exports.likeCard = (req, res, next) => {
