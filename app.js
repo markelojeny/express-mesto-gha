@@ -1,7 +1,7 @@
 const helmet = require('helmet');
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const router = require('./routes');
 
@@ -19,7 +19,7 @@ mongoose.connect(DB_URL, {
   useNewUrlParser: true,
 });
 
-app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use(router);
 app.use(errors());

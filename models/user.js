@@ -16,7 +16,7 @@ const userSchema = new Schema({
     minlength: [2, 'Минимальная длина поля "about" - 2'],
     maxlength: [30, 'Максимальная длина поля "about" - 30'],
     required: false,
-    default: 'Исследователь океанов',
+    default: 'Исследователь',
   },
   avatar: {
     type: String,
