@@ -19,9 +19,25 @@ module.exports.getUsers = (req, res, next) => {
     });
 };
 
-module.exports.getUser = (req, res, next) => {
+module.exports.getUserById = (req, res, next) => {
   const { userId } = req.params;
   User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Нет пользователя с таким id');
+      }
+      res.status(OK).send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        next(new ValidationError(`Некорректные данные: + ${err.message}`));
+      }
+      next(err);
+    });
+};
+
+module.exports.getUser = (req, res, next) => {
+  User.findById(req.user._id)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
