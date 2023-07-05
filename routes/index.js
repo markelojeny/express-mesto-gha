@@ -10,20 +10,17 @@ const { auth } = require('../middlewares/auth');
 const {
   validationCreateUser, validationLogin,
 } = require('../middlewares/validation');
+
 const NotFoundError = require('../errors/NotFoundError');
 
 router.post('/signin', validationLogin, login);
 router.post('/signup', validationCreateUser, createUser);
 
-router.use('*', (req, res, next) => {
-  next(new NotFoundError('Страница не найдена'));
-});
-
 router.use(auth);
 router.use('/', userRouter);
 router.use('/', cardRouter);
 
-router.use((req, res, next) => {
+router.use('*', (req, res, next) => {
   next(new NotFoundError('Страница не найдена'));
 });
 
