@@ -43,7 +43,7 @@ module.exports.getUser = (req, res, next) => {
       throw new NotFoundError('Нет пользователя с таким id');
     })
     .then((user) => {
-      res.status(OK).send({ user });
+      res.status(OK).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
