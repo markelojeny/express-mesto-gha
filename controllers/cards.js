@@ -34,19 +34,13 @@ module.exports.createCard = (req, res, next) => {
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .orFail(() => {
-      throw new NotFoundError('Карточка с указанным _id не найдена');
+      throw new NotFoundError('Передан несуществующий _id карточки');
     })
     .then((card) => {
       if (String(card.owner) === req.user._id) {
-        Card.findByIdAndRemove(req.params.cardId)
-          .then(() => res.status(OK).send(card))
-          .catch((err) => {
-            if (err.name === 'ValidationError' || err.name === 'CastError') {
-              throw new ValidationError(`Некорректные данные: + ${err.message}`);
-            } else {
-              throw new AccessDeniedError('Нет прав на удаление карточки');
-            }
-          });
+        Card.findByIdAndRemove(req.params.cardId).then(() => res.status(OK).send(card));
+      } else {
+        throw new AccessDeniedError('Нет прав на удаление карточки');
       }
     })
     .catch(next);
