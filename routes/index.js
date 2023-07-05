@@ -20,7 +20,7 @@ router.use('*', (req, res, next) => {
 });
 
 router.use(auth);
-router.use('/users', userRouter);
-router.use('/cards', cardRouter);
+router.use('/', userRouter);
+router.use('/', cardRouter);
 
 module.exports = router;
